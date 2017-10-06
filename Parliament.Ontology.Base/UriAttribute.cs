@@ -1,14 +1,14 @@
-﻿using System;
-
-namespace Parliament.Ontology.Base
+﻿namespace Parliament.Ontology.Base
 {
-    public class UriAttribute : Attribute
+    using System;
+
+    public abstract class UriAttribute : Attribute
     {
         public UriAttribute(string uri)
         {
-            UriItem = new Uri(uri);
+            this.Uri = new Uri(uri);
         }
 
-        protected Uri UriItem { get; private set; }
+        public Uri Uri { get; private set; }
     }
 }

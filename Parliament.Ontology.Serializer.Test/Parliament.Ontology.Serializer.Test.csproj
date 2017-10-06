@@ -56,7 +56,8 @@
     <Reference Include="Parliament.Ontology.Base">
       <HintPath>..\Parliament.Ontology.Mapper\bin\Debug\Parliament.Ontology.Base.dll</HintPath>
     </Reference>
-    <Reference Include="Parliament.Ontology.Code">
+    <Reference Include="Parliament.Ontology.Code, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Parliament.Ontology.Mapper.Compiler\bin\Debug\Parliament.Ontology.Code.dll</HintPath>
     </Reference>
     <Reference Include="System" />

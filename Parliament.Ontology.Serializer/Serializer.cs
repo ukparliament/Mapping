@@ -1,19 +1,19 @@
-﻿using Parliament.Ontology.Base;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using VDS.RDF;
-using VDS.RDF.Parsing;
-
-namespace Parliament.Ontology.Serializer
+﻿namespace Parliament.Ontology.Serializer
 {
+    using Parliament.Ontology.Base;
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
+    using VDS.RDF;
+    using VDS.RDF.Parsing;
+
     public class Serializer
     {
-        private string idPropertyName = typeof(IBaseOntology).GetProperties().SingleOrDefault().Name;
+        private string idPropertyName = nameof(IOntologyInstance.SubjectUri);
 
-        public Graph Serialize<T>(IEnumerable<T> items, Assembly ontologyAssembly, SerializerOptions serializerOptions = SerializerOptions.None, Graph graph = null) where T : IBaseOntology
+        public Graph Serialize<T>(IEnumerable<T> items, Assembly ontologyAssembly, SerializerOptions serializerOptions = SerializerOptions.None, Graph graph = null) where T : IOntologyInstance
         {
             if ((items == null) || (items.Any() == false))
                 return null;
@@ -21,7 +21,7 @@ namespace Parliament.Ontology.Serializer
                 graph = new Graph();
             Dictionary<string, PropertyMetadata> propertyMetadataDictionary = giveMePropertyMetadataDictionary(ontologyAssembly);
             Dictionary<Type, Uri> classUriTypeDictionary = giveMeClassUriTypeDictionary(ontologyAssembly);
-            foreach (IBaseOntology item in items)
+            foreach (IOntologyInstance item in items)
             {
                 object idValue = item.GetType().GetProperty(idPropertyName).GetValue(item, null);
                 if (idValue == null)
@@ -33,12 +33,12 @@ namespace Parliament.Ontology.Serializer
             return graph;
         }
 
-        public IEnumerable<IBaseOntology> Deserialize(IGraph graph, Assembly ontologyAssembly)
+        public IEnumerable<IOntologyInstance> Deserialize(IGraph graph, Assembly ontologyAssembly)
         {
             Dictionary<Type, Uri> classUriTypeDictionary = giveMeClassUriTypeDictionary(ontologyAssembly);
-            IBaseOntology[] things = giveMeSomeThings(graph, classUriTypeDictionary).ToArray();
+            IOntologyInstance[] things = giveMeSomeThings(graph, classUriTypeDictionary).ToArray();
             Dictionary<string, PropertyMetadata> propertyMetadataDictionary = giveMePropertyMetadataDictionary(ontologyAssembly);
-            foreach (IBaseOntology item in things)
+            foreach (IOntologyInstance item in things)
                 populateInstance(item, things, graph, propertyMetadataDictionary);
             return things;
         }
@@ -88,12 +88,12 @@ namespace Parliament.Ontology.Serializer
                                     valueNode = ((DateTimeOffset)itemValue).ToLiteralDate(nodeFactory);
                                 else
                                     if (propertyMetadata.ObjectRangeUri.ToString() == "http://www.w3.org/2001/XMLSchema#string")
-                                        valueNode = nodeFactory.CreateLiteralNode(itemValue.ToString());
-                                        else
+                                    valueNode = nodeFactory.CreateLiteralNode(itemValue.ToString());
+                                else
                                             if (propertyMetadata.ObjectRangeUri.ToString() == "http://www.w3.org/2001/XMLSchema#dateTime")
-                                                valueNode = ((DateTimeOffset)itemValue).ToLiteral(nodeFactory, true);
-                                            else
-                                                valueNode = nodeFactory.CreateLiteralNode(itemValue.ToString(), propertyMetadata.ObjectRangeUri);
+                                    valueNode = ((DateTimeOffset)itemValue).ToLiteral(nodeFactory, true);
+                                else
+                                    valueNode = nodeFactory.CreateLiteralNode(itemValue.ToString(), propertyMetadata.ObjectRangeUri);
                             }
                             else
                                 valueNode = nodeFactory.CreateLiteralNode(itemValue.ToString());
@@ -106,7 +106,7 @@ namespace Parliament.Ontology.Serializer
             return triples;
         }
 
-        private IEnumerable<IBaseOntology> giveMeSomeThings(IGraph graph, Dictionary<Type, Uri> classUriTypeDictionary)
+        private IEnumerable<IOntologyInstance> giveMeSomeThings(IGraph graph, Dictionary<Type, Uri> classUriTypeDictionary)
         {
             IEnumerable<Triple> thingNodes = graph.GetTriplesWithPredicate(graph.CreateUriNode(new Uri(RdfSpecsHelper.RdfType)))
                 .Distinct();
@@ -114,32 +114,32 @@ namespace Parliament.Ontology.Serializer
             {
                 Type classType = classUriTypeDictionary.FirstOrDefault(cu => cu.Value == ((IUriNode)thing.Object).Uri).Key;
                 object result = Activator.CreateInstance(classType);
-                ((IBaseOntology)result).SubjectUri = ((IUriNode)thing.Subject).Uri;
-                yield return result as IBaseOntology;
+                ((IOntologyInstance)result).SubjectUri = ((IUriNode)thing.Subject).Uri;
+                yield return result as IOntologyInstance;
             }
         }
 
         private Dictionary<Type, Uri> giveMeClassUriTypeDictionary(Assembly ontologyAssembly)
         {
             return ontologyAssembly.GetTypes()
-                .Where(t => t.IsClass && t.GetInterfaces().Any(i => i == typeof(IBaseOntology)))
+                .Where(t => t.IsClass && t.GetInterfaces().Any(i => i == typeof(IOntologyInstance)))
                 .Select(t => new KeyValuePair<Type, Type>(t, t.GetInterfaces()
-                    .Except(new Type[] { typeof(IBaseOntology) })
+                    .Except(new Type[] { typeof(IOntologyInstance) })
                     .Except(t.GetInterfaces().SelectMany(i => i.GetInterfaces()))
                     .SingleOrDefault()))
-                .Select(ic => new KeyValuePair<Type, Uri>(ic.Key, ic.Value.GetCustomAttribute<UriTypeAttribute>().TypeUri))
+                .Select(ic => new KeyValuePair<Type, Uri>(ic.Key, ic.Value.GetCustomAttribute<UriTypeAttribute>().Uri))
                 .ToDictionary(kv => kv.Key, kv => kv.Value);
         }
 
         private Dictionary<string, PropertyMetadata> giveMePropertyMetadataDictionary(Assembly ontologyAssembly)
         {
             return ontologyAssembly.GetTypes()
-                .Where(t => t.IsInterface && t.GetInterfaces().Any(i => i == typeof(IBaseOntology)))
+                .Where(t => t.IsInterface && t.GetInterfaces().Any(i => i == typeof(IOntologyInstance)))
                 .SelectMany(i => i.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance | BindingFlags.SetProperty))
                 .Select(p => new KeyValuePair<string, PropertyMetadata>(p.Name, new PropertyMetadata()
                 {
-                    PredicateUri = p.GetCustomAttribute<UriPredicateAttribute>().PredicateUri,
-                    ObjectRangeUri = p.GetCustomAttribute<UriRangeAttribute>() != null ? p.GetCustomAttribute<UriRangeAttribute>().RangeUri : null,
+                    PredicateUri = p.GetCustomAttribute<UriPredicateAttribute>().Uri,
+                    ObjectRangeUri = p.GetCustomAttribute<UriRangeAttribute>() != null ? p.GetCustomAttribute<UriRangeAttribute>().Uri : null,
                     IsComplexType = (p.PropertyType.IsPrimitive == false) && (p.PropertyType.IsValueType == false) && (p.PropertyType != typeof(string)) &&
                           (p.PropertyType.GenericTypeArguments.All(t => t.IsPrimitive == false)) && (p.PropertyType.GenericTypeArguments.All(t => t.IsValueType == false)) && (p.PropertyType.GenericTypeArguments.All(t => t != typeof(string)))
                 }))
@@ -152,7 +152,7 @@ namespace Parliament.Ontology.Serializer
             return properties.Select(p => p.Name).Where(n => n != idPropertyName);
         }
 
-        private void populateInstance(IBaseOntology item, IBaseOntology[] things, IGraph graph, Dictionary<string, PropertyMetadata> propertyMetadataDictionary)
+        private void populateInstance(IOntologyInstance item, IOntologyInstance[] things, IGraph graph, Dictionary<string, PropertyMetadata> propertyMetadataDictionary)
         {
             IUriNode subject = graph.CreateUriNode(item.SubjectUri);
             IEnumerable<Triple> triples = graph.GetTriplesWithSubject(subject)
@@ -198,7 +198,7 @@ namespace Parliament.Ontology.Serializer
             }
         }
 
-        private object getTypedValueFromNode(INode node, IBaseOntology[] things)
+        private object getTypedValueFromNode(INode node, IOntologyInstance[] things)
         {
             if (node is ILiteralNode)
             {

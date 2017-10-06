@@ -51,14 +51,11 @@
   <ItemGroup>
     <Compile Include="MapperGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UriExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Parliament.Ontology.Mapper.nuspec">
       <SubType>Designer</SubType>
     </None>
-    <None Include="web.config.install.xdt" />
-    <None Include="app.config.install.xdt" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

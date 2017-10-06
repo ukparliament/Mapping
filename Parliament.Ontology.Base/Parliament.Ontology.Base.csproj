@@ -34,7 +34,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IBaseOntology.cs" />
+    <Compile Include="IOntologyInstance.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UriAttribute.cs" />
     <Compile Include="UriPredicateAttribute.cs" />
