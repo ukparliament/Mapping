@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>ParliamentOntologyMapper</id>
+    <version>1.0.0</version>
+    <title>Parliament.Ontology.Mapper</title>
+    <authors>$authors$</authors>
+    <owners>$owners$</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Part of utility for ontology for UK Parliament</description>
+    <releaseNotes>First release.</releaseNotes>
+    <copyright>Copyright 2017</copyright>
+    <tags>Ontology RDF</tags>
+  </metadata>
+</package>
