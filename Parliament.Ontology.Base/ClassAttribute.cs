@@ -3,8 +3,8 @@
     using System;
 
     [AttributeUsage(AttributeTargets.Interface)]
-    public class UriTypeAttribute : UriAttribute
+    public class ClassAttribute : ResourceAttribute
     {
-        public UriTypeAttribute(string typeUri) : base(typeUri) { }
+        public ClassAttribute(string typeUri) : base(typeUri) { }
     }
 }

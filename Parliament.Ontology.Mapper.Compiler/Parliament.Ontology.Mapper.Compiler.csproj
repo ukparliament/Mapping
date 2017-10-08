@@ -45,6 +45,9 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Proposed-Physical-Ontology-with-certain-subclasses-commented.ttl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Parliament.Ontology.Base\Parliament.Ontology.Base.csproj">

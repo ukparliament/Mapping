@@ -49,8 +49,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MapperGenerator.cs" />
+    <Compile Include="CodeDom\ClassDeclaration.cs" />
+    <Compile Include="CodeDom\CompileUnit.cs" />
+    <Compile Include="CodeDom\InterfaceDeclaration.cs" />
+    <Compile Include="CodeDom\InterfaceProperty.cs" />
+    <Compile Include="CodeDom\Namespace.cs" />
+    <Compile Include="CodeDom\ResourceAttributeDeclaration.cs" />
+    <Compile Include="CodeDom\PropertyWithBackingField.cs" />
+    <Compile Include="Generator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Parliament.Ontology.Mapper.nuspec">

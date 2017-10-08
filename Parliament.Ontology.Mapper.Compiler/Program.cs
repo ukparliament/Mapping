@@ -11,7 +11,20 @@
             var ontologyFilePath = ConfigurationManager.AppSettings["OntologyFilePath"];
             var namespaceName = ConfigurationManager.AppSettings["NamespaceName"];
 
-            var result = MapperGenerator.CompileAssembly(ontologyFilePath, namespaceName);
+            Compile(ontologyFilePath, namespaceName);
+            Print(ontologyFilePath, namespaceName);
+        }
+
+        private static void Print(string ontologyFilePath, string namespaceName)
+        {
+            var result = Generator.GenerateCode(ontologyFilePath, namespaceName);
+
+            Console.WriteLine(result);
+        }
+
+        private static void Compile(string ontologyFilePath, string namespaceName)
+        {
+            var result = Generator.CompileAssembly(ontologyFilePath, namespaceName);
 
             if (result.Errors.Count > 0)
             {
@@ -24,10 +37,6 @@
             }
 
             Console.WriteLine($"Compiled to {result.CompiledAssembly.Location}");
-
-            //var result = MapperGenerator.GenerateCode(ontologyFilePath, namespaceName);
-
-            //Console.WriteLine(result);
         }
     }
 }

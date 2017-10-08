@@ -13,23 +13,36 @@
     {
         private string idPropertyName = nameof(IOntologyInstance.SubjectUri);
 
+        // TODO: Is generic string typing required here?
         public Graph Serialize<T>(IEnumerable<T> items, Assembly ontologyAssembly, SerializerOptions serializerOptions = SerializerOptions.None, Graph graph = null) where T : IOntologyInstance
         {
             if ((items == null) || (items.Any() == false))
-                return null;
-            if (graph == null)
-                graph = new Graph();
-            Dictionary<string, PropertyMetadata> propertyMetadataDictionary = giveMePropertyMetadataDictionary(ontologyAssembly);
-            Dictionary<Type, Uri> classUriTypeDictionary = giveMeClassUriTypeDictionary(ontologyAssembly);
-            foreach (IOntologyInstance item in items)
             {
-                object idValue = item.GetType().GetProperty(idPropertyName).GetValue(item, null);
+                return null;
+            }
+
+            if (graph == null)
+            {
+                graph = new Graph();
+            }
+
+            var propertyMetadataDictionary = giveMePropertyMetadataDictionary(ontologyAssembly);
+            var classUriTypeDictionary = giveMeClassUriTypeDictionary(ontologyAssembly);
+
+            foreach (var item in items)
+            {
+                var idValue = item.GetType().GetProperty(idPropertyName).GetValue(item, null);
                 if (idValue == null)
+                {
                     throw new NullReferenceException(idPropertyName);
-                Uri id = new Uri(idValue.ToString());
-                IEnumerable<Triple> triples = generateGraph(item, id, propertyMetadataDictionary, classUriTypeDictionary, serializerOptions, new Dictionary<Uri, HashSet<Uri>>());
+                }
+
+                var id = new Uri(idValue.ToString());
+                var triples = generateGraph(item, id, propertyMetadataDictionary, classUriTypeDictionary, serializerOptions, new Dictionary<Uri, HashSet<Uri>>());
+
                 graph.Assert(triples);
             }
+
             return graph;
         }
 
@@ -127,7 +140,7 @@
                     .Except(new Type[] { typeof(IOntologyInstance) })
                     .Except(t.GetInterfaces().SelectMany(i => i.GetInterfaces()))
                     .SingleOrDefault()))
-                .Select(ic => new KeyValuePair<Type, Uri>(ic.Key, ic.Value.GetCustomAttribute<UriTypeAttribute>().Uri))
+                .Select(ic => new KeyValuePair<Type, Uri>(ic.Key, ic.Value.GetCustomAttribute<ClassAttribute>().Uri))
                 .ToDictionary(kv => kv.Key, kv => kv.Value);
         }
 
@@ -138,8 +151,9 @@
                 .SelectMany(i => i.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance | BindingFlags.SetProperty))
                 .Select(p => new KeyValuePair<string, PropertyMetadata>(p.Name, new PropertyMetadata()
                 {
-                    PredicateUri = p.GetCustomAttribute<UriPredicateAttribute>().Uri,
-                    ObjectRangeUri = p.GetCustomAttribute<UriRangeAttribute>() != null ? p.GetCustomAttribute<UriRangeAttribute>().Uri : null,
+                    PredicateUri = p.GetCustomAttribute<PropertyAttribute>().Uri,
+                    // TODO: Get ObjectRangeUri from type interface declaration class attribute?
+                    ObjectRangeUri = p.GetCustomAttribute<RangeAttribute>() != null ? p.GetCustomAttribute<RangeAttribute>().Uri : null,
                     IsComplexType = (p.PropertyType.IsPrimitive == false) && (p.PropertyType.IsValueType == false) && (p.PropertyType != typeof(string)) &&
                           (p.PropertyType.GenericTypeArguments.All(t => t.IsPrimitive == false)) && (p.PropertyType.GenericTypeArguments.All(t => t.IsValueType == false)) && (p.PropertyType.GenericTypeArguments.All(t => t != typeof(string)))
                 }))
@@ -241,7 +255,5 @@
             return (type != typeof(string)) && ((type.IsArray) ||
                 ((type.GetInterfaces().Any()) && (type.GetInterfaces().Any(i => i == typeof(IEnumerable)))));
         }
-
     }
-
 }

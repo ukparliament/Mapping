@@ -34,12 +34,12 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClassAttribute.cs" />
     <Compile Include="IOntologyInstance.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UriAttribute.cs" />
-    <Compile Include="UriPredicateAttribute.cs" />
-    <Compile Include="UriRangeAttribute.cs" />
-    <Compile Include="UriTypeAttribute.cs" />
+    <Compile Include="PropertyAttribute.cs" />
+    <Compile Include="RangeAttribute.cs" />
+    <Compile Include="ResourceAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Parliament.Ontology.Base.nuspec">

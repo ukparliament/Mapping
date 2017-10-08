@@ -14,43 +14,34 @@
     [TestClass]
     public class UnitTest1
     {
+        private static Assembly mappingAssembly = typeof(IPerson).Assembly;
+
         [TestMethod]
         public void SerializeSingularModel()
         {
-            IOntologyInstance t = createTerritoryModel();
-            Serializer s = new Serializer();
-            Graph g0 = s.Serialize(new IOntologyInstance[] { t }, typeof(Parliament.Ontology.Code.Approval).Assembly);
-            Assert.AreEqual(g0.Triples.Count, 18);
+            var territory = CreateTerritoryModel();
+            var serializer = new Serializer();
+            var graph = serializer.Serialize(new IOntologyInstance[] { territory }, mappingAssembly);
+            Assert.AreEqual(graph.Triples.Count, 4);
         }
 
         [TestMethod]
         public void SerializeSingularModelWithoutType()
         {
-            IOntologyInstance t = createTerritoryModel();
-            Serializer s = new Serializer();
-            Graph g0 = s.Serialize(new IOntologyInstance[] { t }, typeof(Parliament.Ontology.Code.Approval).Assembly, SerializerOptions.ExcludeRdfType);
-            Graph g1 = s.Serialize(new IOntologyInstance[] { t }, typeof(Parliament.Ontology.Code.Approval).Assembly);
-            GraphDiffReport diff = g0.Difference(g1);
-            Uri predicate = diff.AddedTriples
-                .Select(tr => tr.Predicate as IUriNode)
-                .Distinct()
-                .SingleOrDefault()
-                .Uri;
-
-            Assert.AreEqual(g0.Triples.Count, 13);
-            Assert.AreEqual(g1.Triples.Count, 18);
-            Assert.AreEqual(diff.AddedTriples.Count(), 5);
-            Assert.AreEqual(predicate.ToString(), RdfSpecsHelper.RdfType);
+            var territory = CreateTerritoryModel();
+            var serializer = new Serializer();
+            var graph = serializer.Serialize(new IOntologyInstance[] { territory }, mappingAssembly, SerializerOptions.ExcludeRdfType);
+            Assert.AreEqual(graph.Triples.Count, 3);
         }
 
         [TestMethod]
         public void SerializeSingularModelAndDeserializeIt()
         {
-            IOntologyInstance t = createTerritoryModel();
+            IOntologyInstance t = CreateTerritoryModel();
             Serializer s = new Serializer();
-            Graph g0 = s.Serialize(new IOntologyInstance[] { t }, typeof(Parliament.Ontology.Code.Approval).Assembly);
-            IEnumerable<IOntologyInstance> things = s.Deserialize(g0, typeof(Parliament.Ontology.Code.Approval).Assembly);
-            Graph g1 = s.Serialize(things, typeof(Parliament.Ontology.Code.Approval).Assembly);
+            Graph g0 = s.Serialize(new IOntologyInstance[] { t }, mappingAssembly);
+            IEnumerable<IOntologyInstance> things = s.Deserialize(g0, mappingAssembly);
+            Graph g1 = s.Serialize(things, mappingAssembly);
             GraphDiffReport diff = g0.Difference(g1);
             Assert.AreEqual(diff.AddedTriples.Count(), 0);
             Assert.AreEqual(diff.RemovedTriples.Count(), 0);
@@ -68,7 +59,7 @@
                         new TurtleParser().Load(g, reader);
 
                         var serializer = new Serializer();
-                        var instances = serializer.Deserialize(g, typeof(IPerson).Assembly);
+                        var instances = serializer.Deserialize(g, mappingAssembly);
 
                         var nodes = g.Nodes.UriNodes()
                             .Where(x => new Uri("http://id.ukpds.org/").IsBaseOf(x.Uri))
@@ -90,7 +81,7 @@
             Serializer s = new Serializer();
             Graph g0 = new Graph();
             g0.LoadFromString(turtle, new TurtleParser());
-            IEnumerable<IOntologyInstance> t = s.Deserialize(g0, typeof(Parliament.Ontology.Code.Approval).Assembly);
+            IEnumerable<IOntologyInstance> t = s.Deserialize(g0, mappingAssembly);
             Assert.AreEqual(t.Count(), 2);
         }
 
@@ -106,7 +97,7 @@
             Serializer s = new Serializer();
             Graph g0 = new Graph();
             g0.LoadFromString(turtle, new TurtleParser());
-            IEnumerable<IOntologyInstance> t = s.Deserialize(g0, typeof(Parliament.Ontology.Code.Approval).Assembly);
+            IEnumerable<IOntologyInstance> t = s.Deserialize(g0, mappingAssembly);
 
             var t1 = t.OfType<IPerson>().Single();
             var p2 = t.OfType<IFormalBodyMembership>().Single();
@@ -128,7 +119,7 @@
             var s = new Serializer();
             var g0 = new Graph();
             g0.LoadFromString(turtle, new TurtleParser());
-            var t = s.Deserialize(g0, typeof(Parliament.Ontology.Code.Approval).Assembly);
+            var t = s.Deserialize(g0, mappingAssembly);
 
             var numberOfMemberships = t.OfType<IFormalBodyMembership>().Count();
             Assert.AreEqual(numberOfMemberships, 1);
@@ -139,30 +130,19 @@
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void SL_MultipleTypePredicates()
         {
-            string turtle = @"
+            var turtle = @"
 <http://territory.com/> a <http://id.ukpds.org/schema/Territory>.
 <http://territory.com/> a <http://id.ukpds.org/schema/Person>.
 ";
-            Serializer s = new Serializer();
-            Graph g0 = new Graph();
-            g0.LoadFromString(turtle, new TurtleParser());
-            IEnumerable<IOntologyInstance> t = s.Deserialize(g0, typeof(Parliament.Ontology.Code.Approval).Assembly);
+            var s = new Serializer();
+            var g = new Graph();
+            g.LoadFromString(turtle, new TurtleParser());
+            var instances = s.Deserialize(g, mappingAssembly);
 
-            var instance = t.Single();
-            Assert.IsInstanceOfType(instance, typeof(IPerson));
-            Assert.IsInstanceOfType(instance, typeof(IPlace));
-
-            // Should facilitate:
-            //var person = instance as IPerson;
-            //var firstName = person.PersonGivenName;
-            //var lastName = person.PersonFamilyName;
-
-            //var place = instance as IPlace;
-            //var latitude = place.Latitude;
-            //var longitude = place.Longitude;
+            Assert.AreEqual(instances.OfType<IPerson>().Count(), 1);
+            Assert.AreEqual(instances.OfType<IPlace>().Count(), 1);
         }
 
         [TestMethod]
@@ -179,8 +159,8 @@
             var originalGraph = new Graph();
             originalGraph.LoadFromString(turtle, new TurtleParser());
 
-            var t = s.Deserialize(originalGraph, typeof(Parliament.Ontology.Code.Approval).Assembly);
-            var newGraph = s.Serialize(t, typeof(Parliament.Ontology.Code.Approval).Assembly);
+            var t = s.Deserialize(originalGraph, mappingAssembly);
+            var newGraph = s.Serialize(t, mappingAssembly);
             var delta = originalGraph.Difference(newGraph);
 
             Assert.IsTrue(delta.AreEqual);
@@ -194,8 +174,8 @@
             Serializer s = new Serializer();
             Graph g0 = new Graph();
             g0.LoadFromString(turtle, new TurtleParser());
-            IEnumerable<IOntologyInstance> t = s.Deserialize(g0, typeof(Parliament.Ontology.Code.Approval).Assembly);
-            Graph g1 = s.Serialize(t, typeof(Parliament.Ontology.Code.Approval).Assembly);
+            IEnumerable<IOntologyInstance> t = s.Deserialize(g0, mappingAssembly);
+            Graph g1 = s.Serialize(t, mappingAssembly);
             GraphDiffReport diff = g0.Difference(g1);
             Triple removed = diff.RemovedTriples.SingleOrDefault();
             Assert.AreEqual(diff.RemovedTriples.Count(), 1);
@@ -204,26 +184,17 @@
             Assert.AreEqual(diff.AddedTriples.Count(), 0);
         }
 
-        private IOntologyInstance createTerritoryModel()
+        private IOntologyInstance CreateTerritoryModel()
         {
-            /*Territory t2 = new Territory();
-            t2.SubjectUri = new Uri("http://territory.com");
-            t2.TerritoryOfficialName = new string[] { "TerritoryOfficialName123" };
-            return t2;
-            Member m = new Member();
-            m.SubjectUri = new Uri("http://example.com");
-            m.PersonFamilyName = "a";
-            return m;*/
-            //HouseSeat
-            //Gender
-            //Party
-            //(p.PropertyType.GenericTypeArguments.Any()) && (p.PropertyType.GenericTypeArguments.SingleOrDefault().BaseType == null)
-
-            Territory t = new Territory();
-            t.SubjectUri = new Uri("http://territory.com");
-            t.TerritoryName = new string[] { "TerritoryName123", "TerritoryName456" };
-            t.TerritoryOfficialName = new string[] { "TerritoryOfficialName123" };
-            return t;
+            return new Territory
+            {
+                SubjectUri = new Uri("http://territory.com"),
+                TerritoryName = new[] {
+                    "TerritoryName123",
+                    "TerritoryName456" },
+                TerritoryOfficialName = new[] {
+                    "TerritoryOfficialName123" }
+            };
         }
     }
 }
