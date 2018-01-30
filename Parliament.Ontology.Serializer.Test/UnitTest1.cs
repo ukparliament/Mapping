@@ -14,7 +14,7 @@
     [TestClass]
     public class UnitTest1
     {
-        private static Assembly mappingAssembly = typeof(IPerson).Assembly;
+        /*private static Assembly mappingAssembly = typeof(IPerson).Assembly;
 
         [TestMethod]
         public void SerializeSingularModel()
@@ -195,6 +195,6 @@
                 TerritoryOfficialName = new[] {
                     "TerritoryOfficialName123" }
             };
-        }
+        }*/
     }
 }
