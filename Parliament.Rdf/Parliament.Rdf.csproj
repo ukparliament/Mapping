@@ -4,17 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F1F87F29-7F57-45EA-B20B-D627BFB22FD9}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>Parliament.Ontology.Mapper.Compiler</RootNamespace>
-    <AssemblyName>Parliament.Ontology.Mapper.Compiler</AssemblyName>
+    <ProjectGuid>{4A0C2352-D095-4E5D-A5E9-6DE082C657E7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Parliament.Rdf</RootNamespace>
+    <AssemblyName>Parliament.Rdf</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,9 +20,9 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -34,30 +32,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.configuration" />
-    <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="ClassAttribute.cs" />
+    <Compile Include="IResource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Proposed-Physical-Ontology-with-certain-subclasses-commented.ttl">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Parliament.Rdf\Parliament.Rdf.csproj">
-      <Project>{4a0c2352-d095-4e5d-a5e9-6de082c657e7}</Project>
-      <Name>Parliament.Rdf</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Parliament.Ontology\Parliament.Ontology.csproj">
-      <Project>{8bb259bd-bafe-4f68-973e-1dff80166578}</Project>
-      <Name>Parliament.Ontology</Name>
-    </ProjectReference>
+    <Compile Include="PropertyAttribute.cs" />
+    <Compile Include="RangeAttribute.cs" />
+    <Compile Include="ResourceAttribute.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

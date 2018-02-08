@@ -1,4 +1,4 @@
-﻿namespace Parliament.Ontology.Mapper.Compiler
+﻿namespace Parliament.Ontology.Compiler
 {
     using System;
     using System.CodeDom.Compiler;
@@ -17,14 +17,14 @@
 
         private static void Print(string ontologyFilePath, string namespaceName)
         {
-            var result = Generator.GenerateCode(ontologyFilePath, namespaceName);
+            var result = ModelGenerator.GenerateCode(ontologyFilePath, namespaceName);
 
             Console.WriteLine(result);
         }
 
         private static void Compile(string ontologyFilePath, string namespaceName)
         {
-            var result = Generator.CompileAssembly(ontologyFilePath, namespaceName);
+            var result = ModelGenerator.CompileAssembly(ontologyFilePath, namespaceName);
 
             if (result.Errors.Count > 0)
             {
