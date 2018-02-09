@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parliament.Rdf", "Parliamen
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parliament.Rdf.Serialization", "Parliament.Rdf.Serialization\Parliament.Rdf.Serialization.csproj", "{98EC93F0-ACAE-4A40-88C2-2634611E9F8C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parliament.Ontology.Mapper.Compiler", "Parliament.Ontology.Mapper.Compiler\Parliament.Ontology.Mapper.Compiler.csproj", "{F1F87F29-7F57-45EA-B20B-D627BFB22FD9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mapping.Test", "Mapping.Test\Mapping.Test.csproj", "{0DB28B56-2C20-4238-9E5A-78E9A845812A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +29,10 @@ Global
 		{98EC93F0-ACAE-4A40-88C2-2634611E9F8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{98EC93F0-ACAE-4A40-88C2-2634611E9F8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{98EC93F0-ACAE-4A40-88C2-2634611E9F8C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F1F87F29-7F57-45EA-B20B-D627BFB22FD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F1F87F29-7F57-45EA-B20B-D627BFB22FD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F1F87F29-7F57-45EA-B20B-D627BFB22FD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F1F87F29-7F57-45EA-B20B-D627BFB22FD9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DB28B56-2C20-4238-9E5A-78E9A845812A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DB28B56-2C20-4238-9E5A-78E9A845812A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DB28B56-2C20-4238-9E5A-78E9A845812A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DB28B56-2C20-4238-9E5A-78E9A845812A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

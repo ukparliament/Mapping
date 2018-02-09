@@ -10,12 +10,14 @@
 
     public static class ModelGenerator
     {
-        public static CompilerResults CompileAssembly(string ontologyFilePath, string namespaceName)
+        public static CompilerResults CompileAssembly(string ontologyFilePath, string namespaceName, bool generateInMemory = false)
         {
+
             var dom = ModelGenerator.GenerateCodeDom(ontologyFilePath, namespaceName);
             var parameters = new CompilerParameters()
             {
-                OutputAssembly = $"{namespaceName}.dll"
+                OutputAssembly = $"{namespaceName}.dll",
+                GenerateInMemory = generateInMemory
             };
 
             using (var provider = new CSharpCodeProvider())
