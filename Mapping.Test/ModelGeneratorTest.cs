@@ -12,7 +12,7 @@ namespace Mapping.Test
         public void GenerateModelTest()
         {
             var result = ModelGenerator.CompileAssembly("Ontology.ttl", "Parliament.Model", true);
-            Assert.IsTrue(result.Errors.Count == 0);
+            Assert.IsFalse(result.Errors.HasErrors);
         }
     }
 }
