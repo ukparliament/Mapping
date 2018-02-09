@@ -63,15 +63,6 @@
             this.Members.Add(localIdProperty);
         }
 
-        private string localId;
-        public string LocalId
-        {
-            get
-            {
-                return new Uri("").MakeRelativeUri(new Uri("")).ToString();
-            }
-        }
-
         private void AddProperties()
         {
             this.AddPropertiesFrom(this.ontologyClass);
