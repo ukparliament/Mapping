@@ -31,13 +31,7 @@
 
             string baseUriName = nameof(IResource.BaseUri);
             this.Members.AddRange(new PropertyWithBackingField(baseUriName, uriType));
-
-            CodeMemberField localIdField = new CodeMemberField();
-            localIdField.Name = nameof(IResource.LocalId).Lowercase();
-            localIdField.Type = new CodeTypeReference(typeof(string));
-            localIdField.Attributes = MemberAttributes.Private;
-            this.Members.Add(localIdField);
-
+            
             CodeMemberProperty localIdProperty = new CodeMemberProperty();
             localIdProperty.Name = nameof(IResource.LocalId);
             localIdProperty.Type = new CodeTypeReference(typeof(string));
