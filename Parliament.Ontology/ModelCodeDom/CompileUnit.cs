@@ -27,8 +27,7 @@
 
         private void AddReferenceByMarkerType<T>()
         {
-            var assemblyName = typeof(T).Assembly.ManifestModule.Name;
-            this.ReferencedAssemblies.Add(assemblyName);
+            this.ReferencedAssemblies.Add(typeof(T).Assembly.Location);
         }
 
         private void AddNamespace()

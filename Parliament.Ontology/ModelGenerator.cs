@@ -10,13 +10,14 @@
 
     public static class ModelGenerator
     {
-        public static CompilerResults CompileAssembly(string ontologyFilePath, string namespaceName, bool generateInMemory = false)
+        public static CompilerResults CompileAssembly(string ontologyFilePath, string namespaceName, string outputLocation=null, bool generateInMemory = false)
         {
-
             var dom = ModelGenerator.GenerateCodeDom(ontologyFilePath, namespaceName);
+            if (string.IsNullOrWhiteSpace(outputLocation))
+                outputLocation = string.Empty;
             var parameters = new CompilerParameters()
             {
-                OutputAssembly = $"{namespaceName}.dll",
+                OutputAssembly = $"{outputLocation}\\{namespaceName}.dll",
                 GenerateInMemory = generateInMemory
             };
 

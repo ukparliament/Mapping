@@ -11,7 +11,7 @@ namespace Mapping.Test
         [TestMethod]
         public void GenerateModelTest()
         {
-            var result = ModelGenerator.CompileAssembly("Ontology.ttl", "Parliament.Model", true);
+            var result = ModelGenerator.CompileAssembly("Ontology.ttl", "Parliament.Model", System.IO.Path.GetTempPath());
             Assert.IsFalse(result.Errors.HasErrors);
         }
     }

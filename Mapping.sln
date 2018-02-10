@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parliament.Rdf.Serializatio
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mapping.Test", "Mapping.Test\Mapping.Test.csproj", "{0DB28B56-2C20-4238-9E5A-78E9A845812A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parliament.Model", "Parliament.Model\Parliament.Model.csproj", "{1251DD05-AD93-412B-8661-78FCC1C2975D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parliament.ModelBuild", "Parliament.ModelBuild\Parliament.ModelBuild.csproj", "{CD4026E1-31CE-4042-82EF-BBE1598C8A64}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{0DB28B56-2C20-4238-9E5A-78E9A845812A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0DB28B56-2C20-4238-9E5A-78E9A845812A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0DB28B56-2C20-4238-9E5A-78E9A845812A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1251DD05-AD93-412B-8661-78FCC1C2975D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1251DD05-AD93-412B-8661-78FCC1C2975D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1251DD05-AD93-412B-8661-78FCC1C2975D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1251DD05-AD93-412B-8661-78FCC1C2975D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD4026E1-31CE-4042-82EF-BBE1598C8A64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD4026E1-31CE-4042-82EF-BBE1598C8A64}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD4026E1-31CE-4042-82EF-BBE1598C8A64}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD4026E1-31CE-4042-82EF-BBE1598C8A64}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
