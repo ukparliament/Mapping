@@ -56,9 +56,12 @@
     <None Include="Directory.Build.props">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Parliament.Model.nuspec">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <UsingTask TaskName="ModelBuildTask" AssemblyFile="$(MSBuildProjectDirectory)\$(OutputPath)\Parliament.ModelBuild.dll" />
+  <UsingTask TaskName="ModelBuildTask" AssemblyFile="$(OutputPath)\Parliament.ModelBuild.dll" />
   <Target Name="AfterBuild">
     <Message Text="Building Model" />
     <ModelBuildTask OutputLocation="$(MSBuildProjectDirectory)\$(OutputPath)" Namespace="$(MSBuildProjectName)" OntologyFilePath="$(OntologyFilePath)" />
