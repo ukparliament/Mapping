@@ -52,10 +52,15 @@
       <Name>Parliament.Rdf</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Directory.Build.props">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <UsingTask TaskName="ModelBuildTask" AssemblyFile="$(MSBuildProjectDirectory)\$(OutputPath)\Parliament.ModelBuild.dll" />
   <Target Name="AfterBuild">
     <Message Text="Building Model" />
-    <ModelBuildTask OutputLocation="$(MSBuildProjectDirectory)\$(OutputPath)" Namespace="Parliament.Model" OntologyFilePath="C:\PDS\Mapping\Mapping.Test\Ontology.ttl" />
+    <ModelBuildTask OutputLocation="$(MSBuildProjectDirectory)\$(OutputPath)" Namespace="$(MSBuildProjectName)" OntologyFilePath="$(OntologyFilePath)" />
   </Target>
 </Project>

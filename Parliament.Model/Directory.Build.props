@@ -1,0 +1,5 @@
+﻿<Project>
+  <PropertyGroup>
+    <OntologyFilePath>C:\PDS\Mapping\Mapping.Test\Ontology.ttl</OntologyFilePath>
+  </PropertyGroup>
+</Project>
