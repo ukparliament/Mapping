@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Parliament.Model</id>
-    <version/>
+    <version>0</version>
     <description>Parliament Ontology translated into CLRs</description>
     <authors>UK Parliament</authors>
     <dependencies>
