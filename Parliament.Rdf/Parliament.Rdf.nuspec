@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>Parliament.Rdf</id>
+    <version/>
+    <description>Resource and attributes definitions used by Parliament Ontology</description>
+    <authors>UK Parliament</authors>    
+  </metadata>
+</package>

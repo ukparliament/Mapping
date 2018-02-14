@@ -41,5 +41,11 @@
     <Compile Include="RangeAttribute.cs" />
     <Compile Include="ResourceAttribute.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Parliament.Rdf.nuspec">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
