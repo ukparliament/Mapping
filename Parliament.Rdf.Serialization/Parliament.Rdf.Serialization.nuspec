@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>Parliament.Rdf.Serialization</id>
+    <version>0</version>
+    <description>Serialize CLRs to RDF and deserialize RDF to CLRs</description>
+    <authors>UK Parliament</authors>
+    <dependencies>
+      <dependency id="dotNetRDF" version="2.0.1" />
+      <dependency id="Parliament.Rdf" version="1.0.1" />
+    </dependencies>
+  </metadata>
+</package>
