@@ -6,7 +6,7 @@
     <description>Parliament Ontology translated into CLRs</description>
     <authors>UK Parliament</authors>
     <dependencies>
-      <dependency id="Parliament.Rdf" version="1.0" />      
+      <dependency id="Parliament.Rdf" version="1.0.1" />      
     </dependencies>
   </metadata>
 </package>
