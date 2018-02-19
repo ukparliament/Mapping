@@ -33,7 +33,6 @@
                 this.BaseTypes.Add(typeof(IResource));
             }
             
-            // TODO: Do we need to inherit extrernal classes (i.e. skos:Concept)? They probably don't have properties.
             foreach (var superClass in this.ontologyClass.SuperClasses)
             {
                 var superClassName = superClass.ToInterfaceName();

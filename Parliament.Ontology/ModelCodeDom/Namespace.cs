@@ -24,7 +24,6 @@
 
         private void AddInterfaces()
         {
-            // TODO: Do we need to implement extrernal classes (i.e. skos:Concept)? They probably don't have properties.
             foreach (var ontologyClass in this.ontology.AllClasses)
             {
                 var ontologyInterface = new InterfaceDeclaration(ontologyClass);
@@ -34,7 +33,6 @@
 
         private void AddClasses()
         {
-            // TODO: Do we need to implement extrernal classes (i.e. skos:Concept)? They probably don't have properties.
             foreach (var ontologyClass in this.ontology.AllClasses)
             {
                 var ontologyClassTypeDeclaration = new ClassDeclaration(ontologyClass);
