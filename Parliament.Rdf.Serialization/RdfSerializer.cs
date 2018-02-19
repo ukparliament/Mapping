@@ -12,6 +12,8 @@
     public class RdfSerializer
     {
         private string idPropertyName = nameof(IResource.Id);
+        private string baseUriPropertyName = nameof(IResource.BaseUri);
+        private string localIdPropertyName = nameof(IResource.LocalId);
 
         // TODO: Is generic string typing required here?
         public Graph Serialize<T>(IEnumerable<T> items, Type[] model, SerializerOptions serializerOptions = SerializerOptions.None, Graph graph = null) where T : IResource
@@ -169,7 +171,9 @@
         private IEnumerable<string> giveMePropertyNames(Type t)
         {
             PropertyInfo[] properties = t.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance | BindingFlags.SetProperty);
-            return properties.Select(p => p.Name).Where(n => n != idPropertyName);
+            return properties
+                .Select(p => p.Name)
+                .Where(n => (n != idPropertyName) && (n != localIdPropertyName) && (n != baseUriPropertyName));
         }
 
         private void populateInstance(IResource item, IResource[] things, IGraph graph, Dictionary<string, PropertyMetadata> propertyMetadataDictionary)
