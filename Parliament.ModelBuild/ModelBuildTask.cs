@@ -25,7 +25,7 @@ namespace Parliament.ModelBuild
             bool result = true;
             try
             {
-                CompilerResults compilerResults = ModelGenerator.CompileAssembly(OntologyFilePath, Namespace, OutputLocation, false);
+                CompilerResults compilerResults = ModelGenerator.CompileModelImplementationAssembly(OntologyFilePath, Namespace, OutputLocation, false);
                 Log.LogMessage($"{Namespace} compiled with {compilerResults.Errors.Count} error(s)");
                 foreach (CompilerError error in compilerResults.Errors)
                     Log.LogError($"Error {error.ErrorNumber} ({error.Line},{error.Column}): {error.ErrorText}");

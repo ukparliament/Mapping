@@ -40,10 +40,6 @@
       <Project>{cd4026e1-31ce-4042-82ef-bbe1598c8a64}</Project>
       <Name>Parliament.ModelBuild</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Parliament.Rdf\Parliament.Rdf.csproj">
-      <Project>{4a0c2352-d095-4e5d-a5e9-6de082c657e7}</Project>
-      <Name>Parliament.Rdf</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Directory.Build.props">

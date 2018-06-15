@@ -50,6 +50,10 @@
       <Project>{8bb259bd-bafe-4f68-973e-1dff80166578}</Project>
       <Name>Parliament.Ontology</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Parliament.Rdf.Serialization\Parliament.Rdf.Serialization.csproj">
+      <Project>{98ec93f0-acae-4a40-88c2-2634611e9f8c}</Project>
+      <Name>Parliament.Rdf.Serialization</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -81,7 +81,7 @@
             { "http://www.opengis.net/ont/geosparql#wktLiteral", typeof(string) }
         };
 
-        internal static CodeTypeReference ToTypeReference(this OntologyProperty ontologyProperty)
+        internal static CodeTypeReference ToTypeReference(this OntologyProperty ontologyProperty, bool isInterfaceTypeAllowed)
         {
             var rangeClass = ontologyProperty.Ranges.FirstOrDefault();
             var isFunctional = ontologyProperty.IsFunctional();
@@ -104,7 +104,10 @@
             }
             else
             {
-                result = new CodeTypeReference(rangeClass.ToInterfaceName());
+                if (isInterfaceTypeAllowed)
+                    result = new CodeTypeReference(rangeClass.ToInterfaceName());
+                else
+                    result = new CodeTypeReference(rangeClass.ToMemberName());
             }
 
             if (!isFunctional)

@@ -5,8 +5,6 @@ VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parliament.Ontology", "Parliament.Ontology\Parliament.Ontology.csproj", "{8BB259BD-BAFE-4F68-973E-1DFF80166578}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parliament.Rdf", "Parliament.Rdf\Parliament.Rdf.csproj", "{4A0C2352-D095-4E5D-A5E9-6DE082C657E7}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parliament.Rdf.Serialization", "Parliament.Rdf.Serialization\Parliament.Rdf.Serialization.csproj", "{98EC93F0-ACAE-4A40-88C2-2634611E9F8C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mapping.Test", "Mapping.Test\Mapping.Test.csproj", "{0DB28B56-2C20-4238-9E5A-78E9A845812A}"
@@ -25,10 +23,6 @@ Global
 		{8BB259BD-BAFE-4F68-973E-1DFF80166578}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8BB259BD-BAFE-4F68-973E-1DFF80166578}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8BB259BD-BAFE-4F68-973E-1DFF80166578}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4A0C2352-D095-4E5D-A5E9-6DE082C657E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4A0C2352-D095-4E5D-A5E9-6DE082C657E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4A0C2352-D095-4E5D-A5E9-6DE082C657E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4A0C2352-D095-4E5D-A5E9-6DE082C657E7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{98EC93F0-ACAE-4A40-88C2-2634611E9F8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{98EC93F0-ACAE-4A40-88C2-2634611E9F8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{98EC93F0-ACAE-4A40-88C2-2634611E9F8C}.Release|Any CPU.ActiveCfg = Release|Any CPU

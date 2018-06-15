@@ -1,6 +1,6 @@
 ﻿namespace Parliament.Ontology.ModelCodeDom
 {
-    using Parliament.Rdf;
+    using Parliament.Serialization;
     using System;
     using System.CodeDom;
     using VDS.RDF.Ontology;
@@ -10,19 +10,19 @@
         private readonly OntologyGraph ontology;
         private readonly string name;
 
-        internal CompileUnit(string name, OntologyGraph ontology)
+        internal CompileUnit(string name, OntologyGraph ontology,
+            CompileUnitOption compileUnitOption, string modelOutputLocation = null)
         {
             this.ontology = ontology;
             this.name = name;
-
             this.AddReferences();
-            this.AddNamespace();
+            this.AddNamespace(compileUnitOption);
         }
 
         private void AddReferences()
         {
             this.AddReferenceByMarkerType<Uri>();
-            this.AddReferenceByMarkerType<IResource>();
+            this.AddReferenceByMarkerType<BaseResource>();
         }
 
         private void AddReferenceByMarkerType<T>()
@@ -30,9 +30,9 @@
             this.ReferencedAssemblies.Add(typeof(T).Assembly.Location);
         }
 
-        private void AddNamespace()
+        private void AddNamespace(CompileUnitOption compileUnitOption)
         {
-            var ontologyNamespace = new Namespace(this.name, this.ontology);
+            var ontologyNamespace = new Namespace(this.name, this.ontology, compileUnitOption);
             this.Namespaces.Add(ontologyNamespace);
         }
     }

@@ -35,8 +35,8 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseResource.cs" />
     <Compile Include="ClassAttribute.cs" />
-    <Compile Include="IResource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertyAttribute.cs" />
     <Compile Include="RangeAttribute.cs" />

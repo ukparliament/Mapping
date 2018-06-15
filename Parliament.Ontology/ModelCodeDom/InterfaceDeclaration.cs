@@ -1,6 +1,5 @@
 ﻿namespace Parliament.Ontology.ModelCodeDom
 {
-    using Parliament.Rdf;
     using System.CodeDom;
     using System.Reflection;
     using VDS.RDF.Ontology;
@@ -22,17 +21,10 @@
         {
             this.TypeAttributes = TypeAttributes.Public | TypeAttributes.Interface;
             this.Name = this.ontologyClass.ToInterfaceName();
-            this.CustomAttributes.Add(new ResourceAttributeDeclaration<ClassAttribute>(this.ontologyClass));
         }
 
         private void AddSuperClasses()
         {
-            // TODO: This might be unneccessary (move to Thing base class instead).
-            if (this.ontologyClass.IsTopClass)
-            {
-                this.BaseTypes.Add(typeof(IResource));
-            }
-            
             foreach (var superClass in this.ontologyClass.SuperClasses)
             {
                 var superClassName = superClass.ToInterfaceName();

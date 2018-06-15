@@ -1,4 +1,4 @@
-﻿namespace Parliament.Rdf
+﻿namespace Parliament.Serialization
 {
     using System;
 

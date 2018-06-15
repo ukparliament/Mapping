@@ -1,6 +1,6 @@
 ﻿namespace Parliament.Ontology.ModelCodeDom
 {
-    using Parliament.Rdf;
+    using Parliament.Serialization;
     using System;
     using System.CodeDom;
     using System.Reflection;
@@ -10,71 +10,32 @@
     {
         private OntologyClass ontologyClass;
 
-        internal ClassDeclaration(OntologyClass ontologyClass)
+        internal ClassDeclaration(OntologyClass ontologyClass,
+            CompileUnitOption compileUnitOption)
         {
             this.ontologyClass = ontologyClass;
-
+            this.BaseTypes.Add(typeof(BaseResource));
             this.Name = this.ontologyClass.ToPascalCase();
-            this.BaseTypes.Add(this.ontologyClass.ToInterfaceName());
             this.TypeAttributes = TypeAttributes.Public | TypeAttributes.Class;
-
-            this.AddIResourceProperties();
-            this.AddProperties();
+            this.CustomAttributes.Add(new ResourceAttributeDeclaration<ClassAttribute>(this.ontologyClass));
+            this.AddProperties(compileUnitOption);
         }
 
-        private void AddIResourceProperties()
+        private void AddProperties(CompileUnitOption compileUnitOption)
         {
-            CodeTypeReference uriType = new CodeTypeReference(typeof(Uri));
-
-            string idName = nameof(IResource.Id);
-            this.Members.AddRange(new PropertyWithBackingField(idName, uriType));
-
-            string baseUriName = nameof(IResource.BaseUri);
-            this.Members.AddRange(new PropertyWithBackingField(baseUriName, uriType));
-            
-            CodeMemberProperty localIdProperty = new CodeMemberProperty();
-            localIdProperty.Name = nameof(IResource.LocalId);
-            localIdProperty.Type = new CodeTypeReference(typeof(string));
-            localIdProperty.Attributes = MemberAttributes.Public | MemberAttributes.Final;
-            CodeBinaryOperatorExpression condition = new CodeBinaryOperatorExpression(
-                new CodeBinaryOperatorExpression(
-                    new CodeVariableReferenceExpression(baseUriName), CodeBinaryOperatorType.IdentityInequality, new CodePrimitiveExpression(null)),
-                CodeBinaryOperatorType.BooleanAnd,
-                new CodeBinaryOperatorExpression(
-                    new CodeVariableReferenceExpression(idName), CodeBinaryOperatorType.IdentityInequality, new CodePrimitiveExpression(null))
-                );
-            CodeMethodReturnStatement returnStatement = new CodeMethodReturnStatement(
-                new CodeMethodInvokeExpression(new CodeMethodInvokeExpression(                    
-                        new CodeVariableReferenceExpression(baseUriName), "MakeRelativeUri", new CodeExpression[] { new CodeVariableReferenceExpression(idName) }),
-                    "ToString"
-                ));
-            localIdProperty.GetStatements.Add(
-                new CodeConditionStatement(
-                    condition,
-                    new CodeStatement[] { returnStatement },
-                    new CodeStatement[] { new CodeMethodReturnStatement(new CodePrimitiveExpression(null)) }
-                ));
-            this.Members.Add(localIdProperty);
-        }
-
-        private void AddProperties()
-        {
-            this.AddPropertiesFrom(this.ontologyClass);
+            this.AddPropertiesFrom(this.ontologyClass, compileUnitOption);
 
             foreach (var superClass in this.ontologyClass.SuperClasses)
             {
-                this.AddPropertiesFrom(superClass);
+                this.AddPropertiesFrom(superClass, compileUnitOption);
             }
         }
 
-        private void AddPropertiesFrom(OntologyClass ontologyClass)
+        private void AddPropertiesFrom(OntologyClass ontologyClass, CompileUnitOption compileUnitOption)
         {
             foreach (var ontologyProperty in ontologyClass.IsDomainOf)
             {
-                var name = ontologyProperty.ToPascalCase();
-                var type = ontologyProperty.ToTypeReference();
-
-                this.Members.AddRange(new PropertyWithBackingField(name, type));
+                this.Members.AddRange(new PropertyWithBackingField(ontologyProperty));
             }
         }
     }

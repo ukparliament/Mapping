@@ -1,5 +1,6 @@
 ﻿namespace Parliament.Ontology.ModelCodeDom
 {
+    using Parliament.Serialization;
     using System.CodeDom;
     using VDS.RDF.Ontology;
 
@@ -7,19 +8,16 @@
     {
         private OntologyGraph ontology;
 
-        internal Namespace(string name, OntologyGraph ontology) : base(name)
+        internal Namespace(string name, OntologyGraph ontology,
+            CompileUnitOption compileUnitOption) : base(name)
         {
             this.ontology = ontology;
 
-            this.AddImports();
-            this.AddInterfaces();
-            this.AddClasses();
-        }
-
-        private void AddImports()
-        {
-            var systemImport = new CodeNamespaceImport(nameof(System));
-            this.Imports.Add(systemImport);
+            if (compileUnitOption == CompileUnitOption.InterfaceOnly)
+                this.AddInterfaces();
+            else
+                if (compileUnitOption == CompileUnitOption.ModelImplementation)
+                    this.AddClasses(compileUnitOption);
         }
 
         private void AddInterfaces()
@@ -31,11 +29,11 @@
             }
         }
 
-        private void AddClasses()
+        private void AddClasses(CompileUnitOption compileUnitOption)
         {
             foreach (var ontologyClass in this.ontology.AllClasses)
             {
-                var ontologyClassTypeDeclaration = new ClassDeclaration(ontologyClass);
+                var ontologyClassTypeDeclaration = new ClassDeclaration(ontologyClass, compileUnitOption);
                 this.Types.Add(ontologyClassTypeDeclaration);
             }
         }

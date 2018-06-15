@@ -1,6 +1,6 @@
 ﻿namespace Parliament.Rdf.Serialization
 {
-    using Parliament.Rdf;
+    using Parliament.Serialization;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -11,12 +11,12 @@
 
     public class RdfSerializer
     {
-        private string idPropertyName = nameof(IResource.Id);
-        private string baseUriPropertyName = nameof(IResource.BaseUri);
-        private string localIdPropertyName = nameof(IResource.LocalId);
+        private string idPropertyName = nameof(BaseResource.Id);
+        private string baseUriPropertyName = nameof(BaseResource.BaseUri);
+        private string localIdPropertyName = nameof(BaseResource.LocalId);
 
         // TODO: Is generic string typing required here?
-        public Graph Serialize<T>(IEnumerable<T> items, Type[] model, SerializerOptions serializerOptions = SerializerOptions.None, Graph graph = null) where T : IResource
+        public Graph Serialize<T>(IEnumerable<T> items, Type[] model, SerializerOptions serializerOptions = SerializerOptions.None, Graph graph = null) where T : BaseResource
         {
             if ((items == null) || (items.Any() == false))
             {
@@ -48,17 +48,17 @@
             return graph;
         }
 
-        public IEnumerable<IResource> Deserialize(IGraph graph, Type[] model, Uri baseUri = null)
+        public IEnumerable<BaseResource> Deserialize(IGraph graph, Type[] model, Uri baseUri = null)
         {
             Dictionary<Type, Uri> classUriTypeDictionary = giveMeClassUriTypeDictionary(model);
-            IResource[] things = giveMeSomeThings(graph, classUriTypeDictionary, baseUri).ToArray();
+            BaseResource[] things = giveMeSomeThings(graph, classUriTypeDictionary, baseUri).ToArray();
             Dictionary<string, PropertyMetadata> propertyMetadataDictionary = giveMePropertyMetadataDictionary(model);
-            foreach (IResource item in things)
+            foreach (BaseResource item in things)
                 populateInstance(item, things, graph, propertyMetadataDictionary);
             return things;
         }
 
-        public IEnumerable<IResource> Deserialize(IGraph graph, Assembly modelAssembly, Uri baseUri = null)
+        public IEnumerable<BaseResource> Deserialize(IGraph graph, Assembly modelAssembly, Uri baseUri = null)
         {
             return Deserialize(graph, modelAssembly.GetTypes(), baseUri);
         }
@@ -126,7 +126,7 @@
             return triples;
         }
 
-        private IEnumerable<IResource> giveMeSomeThings(IGraph graph, Dictionary<Type, Uri> classUriTypeDictionary, Uri baseUri = null)
+        private IEnumerable<BaseResource> giveMeSomeThings(IGraph graph, Dictionary<Type, Uri> classUriTypeDictionary, Uri baseUri = null)
         {
             IEnumerable<Triple> thingNodes = graph.GetTriplesWithPredicate(graph.CreateUriNode(new Uri(RdfSpecsHelper.RdfType)))
                 .Distinct();
@@ -134,37 +134,33 @@
             {
                 Type classType = classUriTypeDictionary.FirstOrDefault(cu => cu.Value == ((IUriNode)thing.Object).Uri).Key;
                 object result = Activator.CreateInstance(classType);
-                ((IResource)result).Id = ((IUriNode)thing.Subject).Uri;
-                ((IResource)result).BaseUri = baseUri;
-                yield return result as IResource;
+                ((BaseResource)result).Id = ((IUriNode)thing.Subject).Uri;
+                ((BaseResource)result).BaseUri = baseUri;
+                yield return result as BaseResource;
             }
         }
 
         private Dictionary<Type, Uri> giveMeClassUriTypeDictionary(Type[] model)
         {
             return model
-                .Where(t => t.IsClass && t.GetInterfaces().Any(i => i == typeof(IResource)))
-                .Select(t => new KeyValuePair<Type, Type>(t, t.GetInterfaces()
-                    .Except(new Type[] { typeof(IResource) })
-                    .Except(t.GetInterfaces().SelectMany(i => i.GetInterfaces()))
-                    .SingleOrDefault()))
-                .Select(ic => new KeyValuePair<Type, Uri>(ic.Key, ic.Value.GetCustomAttribute<ClassAttribute>().Uri))
+                .Where(t => t.IsClass && t.BaseType== typeof(BaseResource))
+                .Select(t => new KeyValuePair<Type, Uri>(t, t.GetCustomAttribute<ClassAttribute>().Uri))
                 .ToDictionary(kv => kv.Key, kv => kv.Value);
         }
 
         private Dictionary<string, PropertyMetadata> giveMePropertyMetadataDictionary(Type[] model)
         {
             return model
-                .Where(t => t.IsInterface && t.GetInterfaces().Any(i => i == typeof(IResource)))
+                .Where(t => t.IsClass && t.BaseType== typeof(BaseResource))
                 .SelectMany(i => i.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance | BindingFlags.SetProperty))
                 .Select(p => new KeyValuePair<string, PropertyMetadata>(p.Name, new PropertyMetadata()
                 {
                     PredicateUri = p.GetCustomAttribute<PropertyAttribute>().Uri,
-                    // TODO: Get ObjectRangeUri from type interface declaration class attribute?
                     ObjectRangeUri = p.GetCustomAttribute<RangeAttribute>() != null ? p.GetCustomAttribute<RangeAttribute>().Uri : null,
                     IsComplexType = (p.PropertyType.IsPrimitive == false) && (p.PropertyType.IsValueType == false) && (p.PropertyType != typeof(string)) &&
                           (p.PropertyType.GenericTypeArguments.All(t => t.IsPrimitive == false)) && (p.PropertyType.GenericTypeArguments.All(t => t.IsValueType == false)) && (p.PropertyType.GenericTypeArguments.All(t => t != typeof(string)))
                 }))
+                .Distinct()
                 .ToDictionary(kv => kv.Key, kv => kv.Value);
         }
 
@@ -176,7 +172,7 @@
                 .Where(n => (n != idPropertyName) && (n != localIdPropertyName) && (n != baseUriPropertyName));
         }
 
-        private void populateInstance(IResource item, IResource[] things, IGraph graph, Dictionary<string, PropertyMetadata> propertyMetadataDictionary)
+        private void populateInstance(BaseResource item, BaseResource[] things, IGraph graph, Dictionary<string, PropertyMetadata> propertyMetadataDictionary)
         {
             IUriNode subject = graph.CreateUriNode(item.Id);
             IEnumerable<Triple> triples = graph.GetTriplesWithSubject(subject)
@@ -222,7 +218,7 @@
             }
         }
 
-        private object getTypedValueFromNode(INode node, IResource[] things)
+        private object getTypedValueFromNode(INode node, BaseResource[] things)
         {
             if (node is ILiteralNode)
             {
