@@ -1,7 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Parliament.Ontology;
 using Parliament.Rdf.Serialization;
-using Parliament.Serialization;
 using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;

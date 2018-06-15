@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Parliament.Serialization
+namespace Parliament.Rdf.Serialization
 {
     public class BaseResource
     {

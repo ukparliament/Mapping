@@ -1,6 +1,6 @@
 ﻿namespace Parliament.Ontology.ModelCodeDom
 {
-    using Parliament.Serialization;
+    using Parliament.Rdf.Serialization;
     using System;
     using System.CodeDom;
     using VDS.RDF.Ontology;

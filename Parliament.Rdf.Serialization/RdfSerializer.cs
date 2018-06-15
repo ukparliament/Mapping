@@ -1,6 +1,5 @@
 ﻿namespace Parliament.Rdf.Serialization
 {
-    using Parliament.Serialization;
     using System;
     using System.Collections;
     using System.Collections.Generic;

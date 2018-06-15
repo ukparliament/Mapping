@@ -1,4 +1,4 @@
-﻿using Parliament.Serialization;
+﻿using Parliament.Rdf.Serialization;
 using System;
 using System.CodeDom;
 using System.CodeDom.Compiler;
