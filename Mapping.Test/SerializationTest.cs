@@ -22,7 +22,7 @@ namespace Mapping.Test
         }
 
         [TestMethod]
-        public void SerializeSimpleClasse()
+        public void SerializeSimpleClass()
         {
             string houseName = "test house";
             object house = createClassInstance("House");
@@ -36,7 +36,7 @@ namespace Mapping.Test
         }
 
         [TestMethod]
-        public void SerializeComplexClasse()
+        public void SerializeComplexClass()
         {
             object parliamentaryIncumbency = createClassInstance("ParliamentaryIncumbency");
             parliamentaryIncumbency.GetType().GetProperty("Id").SetValue(parliamentaryIncumbency, new Uri("http://example.org/123"));
@@ -59,6 +59,40 @@ namespace Mapping.Test
             RdfSerializer serializer = new RdfSerializer();
             Graph result = serializer.Serialize(new BaseResource[] { parliamentaryIncumbency as BaseResource }, compilerResults.CompiledAssembly.GetTypes(), SerializerOptions.ExcludeRdfType);
             Assert.AreEqual(result.Triples.Count, 7);
+        }
+
+        [TestMethod]
+        public void SerializeComplexClassWithTwoOccurancesOfTheSameInstance()
+        {
+            object procedureRoute = createClassInstance("ProcedureRoute");
+            procedureRoute.GetType().GetProperty("Id").SetValue(procedureRoute, new Uri("http://example.org/123"));
+            object procedure = createClassInstance("Procedure");
+            procedure.GetType().GetProperty("Id").SetValue(procedure, new Uri("http://example.org/procedure"));
+            IEnumerable<object> valuesProcedure = new[] { procedure }.Select(c => c);
+            MethodInfo castMethodValuesProcedure = typeof(Enumerable).GetMethod("Cast").MakeGenericMethod(procedure.GetType());
+            object castValuesProcedure = castMethodValuesProcedure.Invoke(valuesProcedure, new object[] { valuesProcedure });
+            procedureRoute.GetType().GetProperty("ProcedureRouteHasProcedure").SetValue(procedureRoute, castValuesProcedure);
+            object fromStep = createClassInstance("ProcedureStep");
+            object toStep = createClassInstance("ProcedureStep");
+            IEnumerable<object> valuesFrom = new[] { fromStep }.Select(c => c);
+            MethodInfo castMethodValuesFrom = typeof(Enumerable).GetMethod("Cast").MakeGenericMethod(fromStep.GetType());
+            object castValuesFrom = castMethodValuesFrom.Invoke(valuesFrom, new object[] { valuesFrom });
+            IEnumerable<object> valuesTo = new[] { toStep }.Select(c => c);
+            MethodInfo castMethodValuesTo = typeof(Enumerable).GetMethod("Cast").MakeGenericMethod(toStep.GetType());
+            object castValuesTo = castMethodValuesTo.Invoke(valuesTo, new object[] { valuesTo });
+            procedureRoute.GetType().GetProperty("ProcedureRouteIsFromProcedureStep").SetValue(procedureRoute, castValuesFrom);
+            procedureRoute.GetType().GetProperty("ProcedureRouteIsToProcedureStep").SetValue(procedureRoute, castValuesTo);
+            fromStep.GetType().GetProperty("Id").SetValue(fromStep, new Uri("http://example.org/step"));
+            toStep.GetType().GetProperty("Id").SetValue(toStep, new Uri("http://example.org/step"));
+            object precludedProcedureRoute = createClassInstance("PrecludedProcedureRoute");
+            precludedProcedureRoute.GetType().GetProperty("Id").SetValue(precludedProcedureRoute, new Uri("http://example.org/123"));
+            IEnumerable<object> valuesPrecluded = new[] { precludedProcedureRoute }.Select(c => c);
+            MethodInfo castMethodValuesPrecluded = typeof(Enumerable).GetMethod("Cast").MakeGenericMethod(precludedProcedureRoute.GetType());
+            object castValuesPrecluded = castMethodValuesPrecluded.Invoke(valuesTo, new object[] { valuesPrecluded });
+            fromStep.GetType().GetProperty("ProcedureStepPrecludesPrecludedProcedureRoute").SetValue(fromStep,castValuesPrecluded);
+            RdfSerializer serializer = new RdfSerializer();
+            Graph result = serializer.Serialize(new BaseResource[] { procedureRoute as BaseResource }, compilerResults.CompiledAssembly.GetTypes(), SerializerOptions.ExcludeRdfType);
+            Assert.AreEqual(result.Triples.Count, 4);
         }
 
         private object createClassInstance(string className)

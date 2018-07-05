@@ -71,8 +71,6 @@
             IUriNode subjectNode = nodeFactory.CreateUriNode(id);
 
             Uri subjectType = classUriTypeDictionary[type];
-            if ((serializedSubjects.ContainsKey(subjectNode.Uri)) && (serializedSubjects[subjectNode.Uri].Contains(subjectType)))
-                return triples;
             if (serializerOptions != SerializerOptions.ExcludeRdfType)
                 triples.Add(new Triple(subjectNode, nodeFactory.CreateUriNode(new Uri(RdfSpecsHelper.RdfType)), nodeFactory.CreateUriNode(subjectType)));
             if (serializedSubjects.ContainsKey(subjectNode.Uri))
@@ -122,7 +120,7 @@
                 }
             }
 
-            return triples;
+            return triples.Distinct();
         }
 
         private IEnumerable<BaseResource> giveMeSomeThings(IGraph graph, Dictionary<Type, Uri> classUriTypeDictionary, Uri baseUri = null)
