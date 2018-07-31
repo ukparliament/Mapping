@@ -236,6 +236,9 @@
                 return null;
         }
 
+        /// <summary>
+        /// gYear conversion is to integer - no timezone offset
+        /// </summary>
         private Dictionary<string, TypeCode> xsdTypeDictionary
         {
             get
@@ -244,6 +247,7 @@
                 {
                     { "http://www.w3.org/2001/XMLSchema#date", TypeCode.DateTime },
                     { "http://www.w3.org/2001/XMLSchema#dateTime", TypeCode.DateTime },
+                    { "http://www.w3.org/2001/XMLSchema#gYear", TypeCode.Int32 },
                     { "http://www.w3.org/2001/XMLSchema#integer", TypeCode.Int32 },
                     { "http://www.w3.org/2001/XMLSchema#decimal", TypeCode.Decimal },
                     { "http://www.w3.org/2001/XMLSchema#double", TypeCode.Double },

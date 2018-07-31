@@ -69,10 +69,14 @@
             return string.Concat(prefix, name);
         }
 
+        /// <summary>
+        /// gYear conversion is from integer - no timezone offset
+        /// </summary>
         private static Dictionary<string, Type> XsdTypeDictionary = new Dictionary<string, Type>
         {
             { "http://www.w3.org/2001/XMLSchema#date", typeof(DateTimeOffset) },
             { "http://www.w3.org/2001/XMLSchema#dateTime", typeof(DateTimeOffset) },
+            { "http://www.w3.org/2001/XMLSchema#gYear", typeof(int) },
             { "http://www.w3.org/2001/XMLSchema#integer", typeof(int) },
             { "http://www.w3.org/2001/XMLSchema#decimal", typeof(decimal) },
             { "http://www.w3.org/2001/XMLSchema#double", typeof(double) },
