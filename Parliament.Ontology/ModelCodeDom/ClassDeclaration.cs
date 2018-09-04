@@ -3,6 +3,7 @@
     using Parliament.Rdf.Serialization;
     using System;
     using System.CodeDom;
+    using System.Linq;
     using System.Reflection;
     using VDS.RDF.Ontology;
 
@@ -18,6 +19,11 @@
             this.Name = this.ontologyClass.ToPascalCase();
             this.TypeAttributes = TypeAttributes.Public | TypeAttributes.Class;
             this.CustomAttributes.Add(new ResourceAttributeDeclaration<ClassAttribute>(this.ontologyClass));
+
+            if ((ontologyClass.Label != null) && (ontologyClass.Label.Any()))
+                foreach (VDS.RDF.ILiteralNode labelNode in ontologyClass.Label)
+                    this.Comments.Add(new CodeCommentStatement(labelNode.Value));
+
             this.AddProperties(compileUnitOption);
         }
 
@@ -28,6 +34,11 @@
             foreach (var superClass in this.ontologyClass.SuperClasses)
             {
                 this.AddPropertiesFrom(superClass, compileUnitOption);
+            }
+
+            foreach (var subClass in this.ontologyClass.SubClasses)
+            {
+                this.AddPropertiesFrom(subClass, compileUnitOption);
             }
         }
 

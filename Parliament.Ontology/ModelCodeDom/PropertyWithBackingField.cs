@@ -40,6 +40,10 @@
             property.Attributes = MemberAttributes.Public | MemberAttributes.Final;
             property.Type = this.type;
 
+            if ((ontologyProperty.Label != null) && (ontologyProperty.Label.Any()))
+                foreach (VDS.RDF.ILiteralNode labelNode in ontologyProperty.Label)
+                    property.Comments.Add(new CodeCommentStatement(labelNode.Value));
+
             var fieldReference = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), fieldName);
             property.GetStatements.Add(new CodeMethodReturnStatement(fieldReference));
             property.SetStatements.Add(new CodeAssignStatement(fieldReference, new CodePropertySetValueReferenceExpression()));
