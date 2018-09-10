@@ -3,6 +3,7 @@
     using Parliament.Rdf.Serialization;
     using System;
     using System.CodeDom;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
     using VDS.RDF.Ontology;
@@ -29,16 +30,26 @@
 
         private void AddProperties(CompileUnitOption compileUnitOption)
         {
-            this.AddPropertiesFrom(this.ontologyClass, compileUnitOption);
-
-            foreach (var superClass in this.ontologyClass.SuperClasses)
+            IEnumerable<OntologyClass> fullClassContext = null;
+            if (this.ontologyClass.SuperClasses.Any())
             {
-                this.AddPropertiesFrom(superClass, compileUnitOption);
+                fullClassContext = this.ontologyClass.SuperClasses
+                    .Union(this.ontologyClass.SuperClasses
+                        .SelectMany(sc => sc.SubClasses));                
             }
-
-            foreach (var subClass in this.ontologyClass.SubClasses)
+            else
             {
-                this.AddPropertiesFrom(subClass, compileUnitOption);
+                fullClassContext = new OntologyClass[] { this.ontologyClass }
+                    .Union(this.ontologyClass.SubClasses);
+            }
+            HashSet<string> classes = new HashSet<string>();
+            foreach (var contextClass in fullClassContext)
+            {
+                if (classes.Contains(contextClass.ToPascalCase()) == false)
+                {
+                    this.AddPropertiesFrom(contextClass, compileUnitOption);
+                    classes.Add(contextClass.ToPascalCase());
+                }
             }
         }
 
