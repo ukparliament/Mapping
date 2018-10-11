@@ -106,7 +106,7 @@
                                     DateTimeOffset dt = (DateTimeOffset)itemValue;
                                     TimeSpan offset = TimeZoneInfo.Local.GetUtcOffset(dt);
                                     dt = dt.Add(offset).Subtract(dt.Offset);
-                                    valueNode = (dt.UtcDateTime).ToLiteralDate(nodeFactory);
+                                    valueNode = new DateTimeOffset(dt.UtcTicks, TimeSpan.Zero).ToLiteralDate(nodeFactory);
                                 }
                                 else
                                     if (propertyMetadata.ObjectRangeUri.ToString() == "http://www.w3.org/2001/XMLSchema#string")
