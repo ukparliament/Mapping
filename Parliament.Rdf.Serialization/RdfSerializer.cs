@@ -102,7 +102,12 @@
                             if (propertyMetadata.ObjectRangeUri != null)
                             {
                                 if (propertyMetadata.ObjectRangeUri.ToString() == "http://www.w3.org/2001/XMLSchema#date")
-                                    valueNode = ((DateTimeOffset)itemValue).ToLiteralDate(nodeFactory);
+                                {
+                                    DateTimeOffset dt = (DateTimeOffset)itemValue;
+                                    TimeSpan offset = TimeZoneInfo.Local.GetUtcOffset(dt);
+                                    dt = dt.Add(offset).Subtract(dt.Offset);
+                                    valueNode = (dt.UtcDateTime).ToLiteralDate(nodeFactory);
+                                }
                                 else
                                     if (propertyMetadata.ObjectRangeUri.ToString() == "http://www.w3.org/2001/XMLSchema#string")
                                     valueNode = nodeFactory.CreateLiteralNode(itemValue.ToString());
@@ -140,7 +145,7 @@
         private Dictionary<Type, Uri> giveMeClassUriTypeDictionary(Type[] model)
         {
             return model
-                .Where(t => t.IsClass && t.BaseType== typeof(BaseResource))
+                .Where(t => t.IsClass && t.BaseType == typeof(BaseResource))
                 .Select(t => new KeyValuePair<Type, Uri>(t, t.GetCustomAttribute<ClassAttribute>().Uri))
                 .ToDictionary(kv => kv.Key, kv => kv.Value);
         }
@@ -148,7 +153,7 @@
         private Dictionary<string, PropertyMetadata> giveMePropertyMetadataDictionary(Type[] model)
         {
             return model
-                .Where(t => t.IsClass && t.BaseType== typeof(BaseResource))
+                .Where(t => t.IsClass && t.BaseType == typeof(BaseResource))
                 .SelectMany(i => i.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance | BindingFlags.SetProperty))
                 .Select(p => new KeyValuePair<string, PropertyMetadata>(p.Name, new PropertyMetadata()
                 {
