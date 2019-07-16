@@ -16,6 +16,7 @@ namespace Mapping.Test
             Assert.IsFalse(result.Errors.HasErrors);
         }
 
+        // Generates a dll
         [TestMethod]
         public void GenerateModelImplementationTest()
         {
@@ -24,6 +25,7 @@ namespace Mapping.Test
             Assert.IsFalse(result.Errors.HasErrors);
         }
 
+        // Generates c# files
         [TestMethod]
         [DataRow("CSharp")]
         [DataRow("Ruby")]
