@@ -123,6 +123,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DeserializationTest.cs" />
     <Compile Include="ModelGeneratorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SerializationTest.cs" />
@@ -137,6 +138,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Parliament.Model\Parliament.Model.csproj">
+      <Project>{1251dd05-ad93-412b-8661-78fcc1c2975d}</Project>
+      <Name>Parliament.Model</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Parliament.Ontology\Parliament.Ontology.csproj">
       <Project>{8bb259bd-bafe-4f68-973e-1dff80166578}</Project>
       <Name>Parliament.Ontology</Name>
