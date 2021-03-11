@@ -42,7 +42,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="Directory.Build.props">
       <SubType>Designer</SubType>
     </None>
